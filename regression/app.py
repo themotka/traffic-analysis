@@ -1,7 +1,7 @@
 """
 CLI-приложение: предсказание зарплат по файлу x_data.npy (выход пайплайна chain_pattern).
 
-Интерфейс: python -m regression.app path/to/x_data.npy
+Интерфейс: python -m regression.app chain_pattern/x_data.npy из корня проекта
 Вывод: список зарплат в рублях (по одному float на строку).
 """
 
