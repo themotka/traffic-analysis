@@ -1,0 +1,50 @@
+Classification Report (test split)
+==================================================
+
+              precision    recall  f1-score   support
+
+      junior       0.68      0.65      0.66       459
+      middle       0.85      0.93      0.89      1575
+      senior       0.97      0.93      0.95      2833
+
+    accuracy                           0.90      4867
+   macro avg       0.83      0.83      0.83      4867
+weighted avg       0.90      0.90      0.90      4867
+
+
+Cross-Validation (5-fold stratified)
+==================================================
+
+              precision    recall  f1-score   support
+
+      junior       0.69      0.63      0.66      1835
+      middle       0.87      0.92      0.89      6301
+      senior       0.96      0.94      0.95     11331
+
+    accuracy                           0.91     19467
+   macro avg       0.84      0.83      0.84     19467
+weighted avg       0.91      0.91      0.91     19467
+
+
+Выводы:
+1. Дисбаланс классов:
+   - junior: 1835 (9.4%)
+   - middle: 6301 (32.4%)
+   - senior: 11331 (58.2%)
+   Применены class_weight='balanced' и SMOTE.
+
+2. Важность признаков (топ-10):
+   - num__experience_years: 0.306
+   - text__лет: 0.145
+   - num__age: 0.099
+   - num__salary: 0.055
+   - text__года: 0.043
+   - text__опыт работы: 0.042
+   - text__лет месяцев: 0.030
+   - text__системный: 0.024
+   - text__год: 0.024
+   - text__опыт: 0.024
+
+3. Улучшения: class_weight, TF-IDF, 5-fold CV, SMOTE
+
+4. Разметка эвристическая (должность + опыт), возможны ошибки.
