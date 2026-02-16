@@ -14,15 +14,10 @@ def load_x_data(path: Path) -> np.ndarray:
     """
     Загружает матрицу признаков из файла .npy (выход пайплайна chain_pattern).
 
-    Args:
-        path: Путь к файлу x_data.npy.
+    path — путь к файлу x_data.npy.
 
-    Returns:
-        Матрица признаков формы (n_samples, n_features).
-
-    Raises:
-        FileNotFoundError: Файл не найден.
-        ValueError: Файл не является корректной 2D-матрицей числовых данных.
+    Возвращает матрицу признаков (объекты по строкам, признаки по столбцам).
+    Генерирует исключение при отсутствии файла или некорректном формате.
     """
     logger.debug("Загрузка признаков из %s", path)
     if not path.is_file():
@@ -48,15 +43,10 @@ def predict_salaries(x_path: Path) -> list[float]:
     Загружает модель из regression/resources и матрицу признаков из указанного файла.
     Предсказания соответствуют порядку строк в x_data.npy.
 
-    Args:
-        x_path: Путь к файлу x_data.npy (выход пайплайна chain_pattern).
+    x_path — путь к файлу x_data.npy (выход пайплайна chain_pattern).
 
-    Returns:
-        Список предсказанных зарплат в рублях (float) для каждого объекта.
-
-    Raises:
-        FileNotFoundError: Не найден файл x_data.npy или файл весов модели в regression/resources.
-        ValueError: Некорректный формат данных или несовместимость числа признаков с моделью.
+    Возвращает предсказанные зарплаты в рублях для каждого объекта.
+    Генерирует исключение при отсутствии файлов или несовместимости признаков.
     """
     X = load_x_data(x_path)
     model = load_model()

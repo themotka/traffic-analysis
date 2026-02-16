@@ -13,7 +13,9 @@ MODEL_FILENAME = "salary_model.joblib"
 
 
 def _resources_dir() -> Path:
-    """Возвращает абсолютный путь к папке resources внутри пакета regression."""
+    """
+    Возвращает абсолютный путь к папке resources внутри пакета regression.
+    """
     return Path(__file__).resolve().parent / "resources"
 
 
@@ -21,8 +23,7 @@ def get_model_path() -> Path:
     """
     Возвращает путь к файлу весов модели в папке resources.
 
-    Returns:
-        Путь к файлу salary_model.joblib в папке regression/resources.
+    Результат указывает на salary_model.joblib в regression/resources.
     """
     return _resources_dir() / MODEL_FILENAME
 
@@ -31,12 +32,8 @@ def load_model() -> Pipeline:
     """
     Загружает обученный пайплайн (преобразования + модель) из папки regression/resources.
 
-    Returns:
-        Обученный пайплайн с методом predict.
-
-    Raises:
-        FileNotFoundError: Файл весов модели не найден в папке regression/resources.
-        ValueError: Файл весов повреждён или объект не поддерживает predict.
+    Возвращает обученный пайплайн с методом predict.
+    Генерирует исключение при отсутствии файла, повреждении или несовместимости объекта.
     """
     path = get_model_path()
     logger.debug("Загрузка модели из %s", path)
@@ -67,11 +64,8 @@ def save_model(pipeline: Union[Pipeline, object]) -> None:
     """
     Сохраняет обученный пайплайн в папку regression/resources.
 
-    Args:
-        pipeline: Обученный пайплайн (например, StandardScaler + регрессор) для сохранения.
-
-    Raises:
-        OSError: Не удалось создать папку regression/resources или записать файл.
+    pipeline — обученный пайплайн (StandardScaler + регрессор) для сохранения.
+    Генерирует исключение при сбое создания папки или записи файла.
     """
     resources = _resources_dir()
     path = resources / MODEL_FILENAME

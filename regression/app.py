@@ -23,10 +23,8 @@ def main() -> None:
     Точка входа CLI.
 
     Читает путь к x_data.npy из аргумента командной строки, загружает модель
-    из regression/resources, выводит предсказанные зарплаты (по одному float на строку).
-
-    Raises:
-        SystemExit: Код 1 при ошибке аргументов или при исключении в predict_salaries.
+    из regression/resources, выводит предсказанные зарплаты (по одному значению на строку).
+    Завершает работу с кодом 1 при неверных аргументах или ошибке предсказания.
     """
     if len(sys.argv) != 2:
         logger.debug("Неверное число аргументов: %d, ожидается 1", len(sys.argv) - 1)
@@ -38,7 +36,7 @@ def main() -> None:
     x_path = Path(sys.argv[1]).resolve()
     try:
         salaries = predict_salaries(x_path)
-    except (FileNotFoundError, ValueError, OSError) as exc:
+    except (ValueError, OSError) as exc:
         logger.debug("Ошибка при предсказании: %s", exc)
         print(f"Ошибка: {exc}", file=sys.stderr)
         sys.exit(1)

@@ -27,15 +27,10 @@ def load_data(data_dir: Path) -> tuple[np.ndarray, np.ndarray]:
     Ожидаются файлы x_data.npy (признаки) и y_data.npy (зарплаты в рублях)
     в указанной папке.
 
-    Args:
-        data_dir: Путь к папке, содержащей x_data.npy и y_data.npy.
+    data_dir — путь к папке, содержащей x_data.npy и y_data.npy.
 
-    Returns:
-        Кортеж (X, y): матрица признаков и вектор целевых значений (зарплаты).
-
-    Raises:
-        FileNotFoundError: Отсутствует x_data.npy или y_data.npy в указанной папке.
-        ValueError: Форма или тип данных в файлах не соответствуют ожидаемым.
+    Возвращает кортеж: матрица признаков и вектор целевых значений (зарплаты).
+    Генерирует исключение при отсутствии файлов или неверном формате данных.
     """
     x_path = data_dir / "x_data.npy"
     y_path = data_dir / "y_data.npy"
@@ -81,13 +76,9 @@ def train(data_dir: Path) -> None:
     Использует данные из указанной папки (x_data.npy, y_data.npy).
     Сохраняется в regression/resources/salary_model.joblib.
 
-    Args:
-        data_dir: Путь к папке с выходом пайплайна chain_pattern.
+    data_dir — путь к папке с выходом пайплайна chain_pattern.
 
-    Raises:
-        FileNotFoundError: Отсутствует x_data.npy или y_data.npy.
-        ValueError: Ошибка формата данных или обучение не удалось.
-        OSError: Не удалось сохранить модель в regression/resources.
+    Генерирует исключение при отсутствии данных, ошибке формата или сбое сохранения.
     """
     X, y = load_data(data_dir)
     X_train, X_test, y_train, y_test = train_test_split(
@@ -100,7 +91,7 @@ def train(data_dir: Path) -> None:
     )
     logger.debug("Запуск обучения пайплайна: StandardScaler + GradientBoostingRegressor")
     pipeline = Pipeline(
-        [
+        steps=[
             ("scaler", StandardScaler()),
             (
                 "regressor",
@@ -108,10 +99,12 @@ def train(data_dir: Path) -> None:
                     n_estimators=100,
                     max_depth=6,
                     min_samples_leaf=20,
+                    learning_rate=0.1,
                     random_state=42,
                 ),
             ),
-        ]
+        ],
+        memory=None,
     )
     try:
         pipeline.fit(X_train, y_train)
@@ -131,7 +124,12 @@ def train(data_dir: Path) -> None:
 
 
 def main() -> None:
-    """Точка входа CLI для обучения модели."""
+    """
+    Точка входа CLI для обучения модели.
+
+    Ожидает один аргумент — путь к папке с x_data.npy и y_data.npy.
+    Завершает работу с кодом 1 при ошибке.
+    """
     if len(sys.argv) != 2:
         print(
             "Использование: python -m regression.train <путь_к_папке_с_x_data_и_y_data>",
@@ -144,7 +142,7 @@ def main() -> None:
         if not data_dir.is_dir():
             raise NotADirectoryError(f"Указанный путь не является папкой: {data_dir}")
         train(data_dir)
-    except (FileNotFoundError, ValueError, OSError, NotADirectoryError) as exc:
+    except (ValueError, OSError) as exc:
         logger.debug("Ошибка при обучении: %s", exc)
         print(f"Ошибка: {exc}", file=sys.stderr)
         sys.exit(1)
