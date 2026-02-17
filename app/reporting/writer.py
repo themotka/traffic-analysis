@@ -33,7 +33,6 @@ def format_conclusions(
         lines.append(f"   - {short}: {val:.3f}")
 
     lines.append("\n3. Улучшения: class_weight, TF-IDF, 5-fold CV" + (", SMOTE" if use_smote else ""))
-    lines.append("\n4. Разметка эвристическая (должность + опыт), возможны ошибки.")
 
     return "\n".join(lines)
 

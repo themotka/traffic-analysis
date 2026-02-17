@@ -5,8 +5,8 @@ import pandas as pd
 
 from ..data.parsers import find_column, parse_age, parse_experience_years, parse_salary
 
-JUNIOR_MAX_YEARS = 2
-SENIOR_MIN_YEARS = 6
+JUNIOR_MAX_YEARS = 7
+SENIOR_MIN_YEARS = 10
 
 
 def assign_level_from_title(job_title) -> str | None:
@@ -14,10 +14,19 @@ def assign_level_from_title(job_title) -> str | None:
     if pd.isna(job_title):
         return None
     title_lower = str(job_title).lower()
-    if any(x in title_lower for x in ["junior", "джуниор", "стажёр", "стажер", "intern"]):
+    
+    # Junior: явные маркеры
+    if any(x in title_lower for x in ["junior", "джуниор", "джун", "стажёр", "стажер", "intern", "trainee", "младший"]):
         return "junior"
-    if any(x in title_lower for x in ["senior", "старший", "lead", "руководитель", "начальник"]):
+    
+    # Senior: лидерство и старшинство
+    if any(x in title_lower for x in ["senior", "старший", "lead", "тимлид", "руководитель", "начальник", "главный", "principal", "architect", "архитектор"]):
         return "senior"
+    
+    # Middle: явные маркеры
+    if any(x in title_lower for x in ["middle", "миддл", "мидл"]):
+        return "middle"
+    
     return None
 
 
